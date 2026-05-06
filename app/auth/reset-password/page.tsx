@@ -14,11 +14,9 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const supabase = createClient()
-    // Check for an existing session first (code already exchanged by /auth/callback)
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) setReady(true)
     })
-    // Also listen in case the event fires after mount
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
         setReady(true)
@@ -54,47 +52,54 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-2">Cricket Auction</h1>
-        <p className="text-gray-500 mb-6">Choose a new password</p>
+    <div className="min-h-screen bg-[#13151a] flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center font-bold">CA</div>
+          <span className="text-2xl font-bold text-white tracking-tight">Cricket Auction</span>
+        </div>
 
-        {!ready ? (
-          <p className="text-sm text-gray-500">Verifying reset link…</p>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">New password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Confirm password</label>
-              <input
-                type="password"
-                value={confirm}
-                onChange={e => setConfirm(e.target.value)}
-                required
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
+        <div className="bg-[#1a1d24] border border-[#2d3139] rounded-2xl p-8">
+          <h1 className="text-xl font-bold text-white mb-1">Choose a new password</h1>
+          <p className="text-[#8b8fa8] text-sm mb-6">Make it something you&apos;ll remember</p>
 
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+          {!ready ? (
+            <p className="text-sm text-[#8b8fa8]">Verifying reset link…</p>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[#8b8fa8] mb-1.5">New password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  className="w-full bg-[#252830] border border-[#2d3139] rounded-xl px-4 py-3 text-white placeholder-[#8b8fa8] focus:outline-none focus:border-violet-500 transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#8b8fa8] mb-1.5">Confirm password</label>
+                <input
+                  type="password"
+                  value={confirm}
+                  onChange={e => setConfirm(e.target.value)}
+                  required
+                  className="w-full bg-[#252830] border border-[#2d3139] rounded-xl px-4 py-3 text-white placeholder-[#8b8fa8] focus:outline-none focus:border-violet-500 transition-colors"
+                />
+              </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
-            >
-              {loading ? 'Updating…' : 'Update password'}
-            </button>
-          </form>
-        )}
+              {error && <p className="text-red-400 text-sm">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-xl font-semibold transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Updating…' : 'Update password'}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   )
