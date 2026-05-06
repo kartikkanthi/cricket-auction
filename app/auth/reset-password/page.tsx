@@ -14,9 +14,13 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const supabase = createClient()
-    // Supabase fires PASSWORD_RECOVERY when the user arrives via the reset link
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') {
+    // Check for an existing session first (code already exchanged by /auth/callback)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) setReady(true)
+    })
+    // Also listen in case the event fires after mount
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
         setReady(true)
       }
     })
