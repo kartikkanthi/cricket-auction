@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 type Profile = { id: string; email: string; team_name: string; budget: number; is_admin: boolean }
 type Player = { id: string; name: string; role: string; base_price: number; status: string; sold_to: string | null; sold_price: number | null }
 type Bid = { id: string; player_id: string; bidder_id: string; amount: number; created_at: string; profiles: { team_name: string } }
-type AuctionSettings = { mode: string; status: string; current_player_id: string | null; timer_end: string | null }
+type AuctionSettings = { id: string; mode: string; status: string; current_player_id: string | null; timer_end: string | null }
 
 export default function AuctionPage() {
   const router = useRouter()
